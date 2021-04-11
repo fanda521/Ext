@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <link href="../../css/ext-theme-classic-all.css"  rel="stylesheet">
+		<script type="text/javascript" src="../../js/ext-all.js" ></script>
+		<link href="../../css/ext-theme-access-all.css" rel="stylesheet" />
+   <script type="text/javascript">	 
+      Ext.require(['*']);
+      Ext.onReady(function(){
+         // 存储数据
+         var myData = [
+            { name : "Asha", age : "16", marks : "90" },
+            { name : "Vinit", age : "18", marks : "95" },
+            { name : "Anand", age : "20", marks : "68" },
+            { name : "Niharika", age : "21", marks : "86" },
+            { name : "Manali", age : "22", marks : "57" }
+         ];
+         // 创建数据模型
+         Ext.define('StudentDataModel', {
+            extend: 'Ext.data.Model',
+            fields: [
+               {name: 'name', mapping : 'name'},
+               {name: 'age', mapping : 'age'},
+               {name: 'marks', mapping : 'marks'}
+            ]
+         });
+          // 创建网格存储
+         var gridStore = Ext.create('Ext.data.Store', {
+            model  : 'StudentDataModel',
+            data   : myData
+         });
+         // 创建第一个网格
+         var grid = Ext.create('Ext.grid.Panel', {
+            viewConfig: {
+               plugins: {
+                  ddGroup: 'GridExample',
+                  ptype: 'gridviewdragdrop',
+                  enableDrop: false
+               }
+            },
+            enableDragDrop   : true,
+            stripeRows       : true,
+            width            : 300,
+            margins          : '0 2 0 0',
+            region           : 'west',
+            title            : 'Student Data Grid',
+            selModel         : Ext.create('Ext.selection.RowModel',{
+               singleSelect : true
+            }),
+            store            : gridStore,
+            columns          : 
+               [{ 
+                  header: "Student Name",
+                  dataIndex: 'name',	
+                  id : 'name',    
+                  flex:  1,  			
+                  sortable: true
+               },{
+                  header: "Age", 
+                  dataIndex: 'age',
+                  flex: .5, 
+                  sortable: true
+               },{
+                  header: "Marks",
+                  dataIndex: 'marks',
+                  flex: .5, 
+                  sortable: true
+               }]
+         });
+         // 创建窗体面板
+         var formPanel = Ext.create('Ext.form.Panel', {
+            region     : 'center',
+            title      : 'Generic Form Panel',
+            bodyStyle  : 'padding: 10px; background-color: #DFE8F6',
+            labelWidth : 100,
+            width      : 300,
+            margins    : '0 0 0 3',
+            items      : [{
+               xtype : 'textfield',
+               fieldLabel : 'Student Name',
+               name       : 'name'
+            },{
+               xtype : 'textfield',
+               fieldLabel : 'Age',
+               name       : 'age'
+            },{
+               xtype : 'textfield',
+               fieldLabel : 'Marks',
+               name       : 'marks'
+            }]
+         });
+         // 创建同时显示网格和窗体的显示面板
+         var displayPanel = Ext.create('Ext.Panel', {
+            width    : 600,
+            height   : 200,
+            layout   : 'border',
+            renderTo : 'panel',
+            bodyPadding: '5',
+            items    : [grid, formPanel],
+            bbar    : [
+               '->',
+               {
+               text    : 'Reset',
+               handler : function() {
+                  gridStore.loadData(myData);
+                  formPanel.getForm().reset();
+               }
+            }]
+         });
+
+         var formPanelDropTargetEl =  formPanel.body.dom;
+        //为drop创建tager变量
+         var formPanelDropTarget = Ext.create('Ext.dd.DropTarget', formPanelDropTargetEl, {
+            ddGroup: 'GridExample',
+            notifyEnter: function(ddSource, e, data) {
+               formPanel.body.stopAnimation();
+               formPanel.body.highlight();
+            },
+            notifyDrop  : function(ddSource, e, data){
+               var selectedRecord = ddSource.dragData.records[0];
+               formPanel.getForm().loadRecord(selectedRecord);
+               ddSource.view.store.remove(selectedRecord);
+               return true;
+            }
+         });
+      });
+   </script>
+</head>
+<body>
+   <div id = "panel" > </div>
+</body>
+</html>

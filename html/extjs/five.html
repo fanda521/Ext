@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.0/classic/theme-triton/resources/theme-triton-all.css" rel="stylesheet" />
+   <script type="text/javascript" src="../../js/ext-all.js" ></script>
+   <script type="text/javascript">
+      Ext.onReady(function() {
+         Ext.create('Ext.container.Container', {
+            renderTo : Ext.getBody(),
+            layout : 'auto' ,
+            width : 600,
+            items : [{
+               xtype	: 'button',
+               iconCls	: 'fa fa-car',
+               text	: 'Browse Fil1e'
+            },{
+               xtype	: 'button',
+               iconCls	: 'fa fa-file',
+               text	: 'Browse File3'
+            },{
+               xtype	: 'button',
+               iconCls	: 'fa fa-home',
+               text	: 'Browse File4'
+            },{
+               xtype	: 'button',
+               iconCls	: 'fa fa-folder',
+               text	: 'Browse File5'
+            }]
+         });
+      });
+   </script>
+</head>
+<body>
+   <div id = "panel" > </div>
+</body>
+</html>
